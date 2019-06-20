@@ -89,6 +89,9 @@ Now open the [QIIME 2 Viewer](https://view.qiime2.org/) in your browser and drag
 
 Using qiime2 in batch mode with job scripts
 
+To run the gneiss tutorial in batch mode, you can download the job script called [blanca_qiime2_gneiss](./blanca_qiime2_gneiss), to `blogin01` and submit it using ```sbatch blanca_qime2_gneiss```
+
+```
 #!/bin/bash
 #SBATCH --time=01:00:00      
 #SBATCH --qos=blanca-ics      
@@ -151,7 +154,7 @@ qiime gneiss dendrogram-heatmap \
   --m-metadata-column Subject \
   --p-color-map seismic \
   --o-visualization heatmap.qzv
-
+```
 
 Once your batch job is complete, you can follow the steps above transfer the resulting output files back to your laptop or use the qiime command-line viewer, per the steps above.
 
