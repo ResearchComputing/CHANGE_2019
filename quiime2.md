@@ -1,3 +1,45 @@
+Notes on what to cover:
+Logging in to Blanca
+Installing qiime2
+Using qiime2 interactively
+Using qiime2 in batch mode with job scripts
+Transferring qiime2 results back to your laptop (Globus)
+Notes on additional aspects:
+-viewing qiime2 results while on Blanca
+
+-----
+
+Logging in to Blanca
+ssh johndoe@blogin01.rc.colorado.edu
+(enter identikey and password, accept duo push to phone)
+
+
+Installing qiime2
+This installaton follows the "native" installaton instructions of qiime2
+https://docs.qiime2.org/2019.4/install/native/
+
+[johndoe@blogin01]$ cd /projects/$USER
+[johndoe@blogin01]$ mkdir -p software/anaconda/envs
+[johndoe@blogin01]$ cd software/anaconda/envs
+
+[johndoe@blogin01]$ source /curc/sw/anaconda3/2019.03/bin/activate
+(base) [johndoe@blogin01]$ wget https://data.qiime2.org/distro/core/qiime2-2019.4-py36-linux-conda.yml
+(base) [johndoe@blogin01]$ conda env create --prefix=$PWD/qiime2-2019.4 --file qiime2-2019.4-py36-linux-conda.yml
+(this will take about 30 min)
+(base) [johndoe@blogin01]$ rm qiime2-2019.4-py36-linux-conda.yml
+
+Using qiime2 interactively
+[johndoe@blogin01]$ sinteractive --partition=blanca-ics --account=blanca-ics --ntasks=1 --time=03:00:00
+[johndoe@bnode0409]$ source /curc/sw/anaconda3/2019.03/bin/activate
+(base) [johndoe@bnode0409]$ source activate /projects/$USER/software/anaconda/envs/qiime2-2019.4
+
+Using qiime2 in batch mode with job scripts
+Transferring qiime2 results back to your laptop (Globus)
+Notes on additional aspects:
+-viewing qiime2 results while on Blanca
+
+
+
 # Using Python with Anaconda
 
 To support the diverse python workflows and high levels of customization Research Computing users require, [Anaconda](http://anaconda.com) is installed on the CURC system. Anaconda is an open-source _python_ and _R_ distribution that uses the _conda_ package manager to easily install software and packages. The following documentation describes how to activate the CURC Anaconda distribution and our default environments, as well as how to create and activate your own custom Anaconda environments. Additional documentation on the [CURC JupyterHub](../gateways/jupyterhub.md) is available for users desiring to interact with their custom environments via [Jupyter notebooks](https://jupyter.org). 
