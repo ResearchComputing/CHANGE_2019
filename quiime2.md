@@ -1,80 +1,134 @@
-Notes on what to cover:
-Logging in to Blanca
-Installing qiime2
-Using qiime2 interactively
-Using qiime2 in batch mode with job scripts
-Transferring qiime2 results back to your laptop (Globus)
-Notes on additional aspects:
--viewing qiime2 results while on Blanca
 
------
 
-Logging in to Blanca
-ssh johndoe@blogin01.rc.colorado.edu
+# Blanca QIIME2 Tutorial
+#### 2019-06-21
+
+This tutorial demonstrates how to install and use the microbiome analysis package [QIIME2](https://docs.qiime2.org/2019.4/getting-started/) on the CU Research Computing Blanca computing cluster.
+
+## Logging in to Blanca
+
+From a terminal on your local computer (laptop or desktop machine), login as follows, substituting your username for `johndoe`.
+``` ssh -X johndoe@blogin01.rc.colorado.edu```
 (enter identikey and password, accept duo push to phone)
 
+## Installing qiime2
 
-Installing qiime2
-This installaton follows the "native" installaton instructions of qiime2
-https://docs.qiime2.org/2019.4/install/native/
+Installaton on Blanca follows the ["native" installaton instructions for qiime2](https://docs.qiime2.org/2019.4/install/native/)
 
+### Create a space for the new environment
+
+```
 [johndoe@blogin01]$ cd /projects/$USER
 [johndoe@blogin01]$ mkdir -p software/anaconda/envs
 [johndoe@blogin01]$ cd software/anaconda/envs
+```
 
+### Initialize the CURC Anaconda distribution and create the QIIME2 environment
+
+```
 [johndoe@blogin01]$ source /curc/sw/anaconda3/2019.03/bin/activate
 (base) [johndoe@blogin01]$ wget https://data.qiime2.org/distro/core/qiime2-2019.4-py36-linux-conda.yml
 (base) [johndoe@blogin01]$ conda env create --prefix=$PWD/qiime2-2019.4 --file qiime2-2019.4-py36-linux-conda.yml
 (this will take about 30 min)
 (base) [johndoe@blogin01]$ rm qiime2-2019.4-py36-linux-conda.yml
+```
 
-Using qiime2 interactively (example)
-We will use the following tutorial to demonstrate using qiime in an interactive job:
-https://docs.qiime2.org/2019.4/tutorials/gneiss/
+### Activate and test the installation with the QIIME --help function
 
-Let's start an interactive session on a blanca-ics compute node:
+You should already be in the 'base' CURC Anaconda environment based on the previous steps.  Now activate the QIIME2 environment:
+
+```
+(base) [johndoe@bnode0409]$ conda activate /projects/$USER/software/anaconda/envs/qiime2-2019.4
+```
+
+...you'll know you've activated it because `qiime2-2019.4` should preceed your prompt.
+
+```
+(qiime2-2019.4) [johndoe@bnode0409]$  mkdir -p /rc_scratch/$USER/qiime2-chronic-fatigue-syndrome-tutorial
+```
+
+## Example: Using qiime2 interactively on Blanca
+
+We will use the QIIME2 tutorial on [Differential Abundance Analysis with Gneiss](https://docs.qiime2.org/2019.4/tutorials/gneiss/) to demonstrate using qiime in an interactive job.
+
+### Start an interactive session on a blanca-ics compute node and activate the QIIME2 environment:
+
+```
 [johndoe@blogin01]$ sinteractive --partition=blanca-ics --account=blanca-ics --ntasks=1 --time=03:00:00
 [johndoe@bnode0409]$ source /curc/sw/anaconda3/2019.03/bin/activate
 (base) [johndoe@bnode0409]$ conda activate /projects/$USER/software/anaconda/envs/qiime2-2019.4
+```
 
-Let's set up our example environment and get the data we need:
+### Set up your workding directory and download needed data:
+
+#### Create a working directoy on `rc_scratch` and `cd` to it:
+```
 (qiime2-2019.4) [johndoe@bnode0409]$  mkdir -p /rc_scratch/$USER/qiime2-chronic-fatigue-syndrome-tutorial
 (qiime2-2019.4) [johndoe@bnode0409]$ cd /rc_scratch/$USER/qiime2-chronic-fatigue-syndrome-tutorial
+```
+
+#### Download the datasets needed to complete the tutorial:
+```
 (qiime2-2019.4) [johndoe@bnode0409]$ wget https://data.qiime2.org/2019.4/tutorials/gneiss/sample-metadata.tsv
 (qiime2-2019.4) [johndoe@bnode0409]$ wget https://data.qiime2.org/2019.4/tutorials/gneiss/table.qza
 (qiime2-2019.4) [johndoe@bnode0409]$ wget https://data.qiime2.org/2019.4/tutorials/gneiss/taxa.qza
+```
 
+### Perform Correlation Clustering
+```
 (qiime2-2019.4) [johndoe@bnode0409]$ qiime gneiss correlation-clustering \
 --i-table table.qza \
 --o-clustering hierarchy.qza
+```
+
+### Alternately, perform Gradient Clustering
+```
 (qiime2-2019.4) [johndoe@bnode0409]$ qiime gneiss gradient-clustering \
 --i-table table.qza \
 --m-gradient-file sample-metadata.tsv \
 --m-gradient-column Age \
 --o-clustering gradient-hierarchy.qza
+```
+
+### Now build a linear model from the correlation clustering results
+
+#### Perform an isometric log ratio (ILR) transform
+```
 (qiime2-2019.4) [johndoe@bnode0409]$ qiime2-chronic-fatigue-syndrome-tutorial]$ qiime gneiss ilr-hierarchical \
 --i-table table.qza \
 --i-tree hierarchy.qza \
 --o-balances balances.qza
+```
+
+#### Run a linear regression on the balances
+```
 (qiime2-2019.4) [johndoe@bnode0409]$ qiime gneiss ols-regression \
   --p-formula "Subject+Sex+Age+BMI+sCD14ugml+LBPugml+LPSpgml" \
   --i-table balances.qza \
   --i-tree hierarchy.qza \
   --m-metadata-file sample-metadata.tsv \
   --o-visualization regression_summary.qzv
- (qiime2-2019.4) [johndoe@bnode0409]$ qiime gneiss dendrogram-heatmap \
+```
+
+### Create a heatmap
+
+```
+(qiime2-2019.4) [johndoe@bnode0409]$ qiime gneiss dendrogram-heatmap \
   --i-table table.qza \
   --i-tree hierarchy.qza \
   --m-metadata-file sample-metadata.tsv \
   --m-metadata-column Subject \
   --p-color-map seismic \
   --o-visualization heatmap.qzv
+```
 
-Now let's copy the data back to our local computer (e.g., laptop) so that we can visualize it. 
+### Vizualize the results
 
-We went through Globus file transfers in a previous class and you should now have Globus Connect Personal on your laptop If you don't, you can get set up in about 5 minutes [here](https://curc.readthedocs.io/en/latest/compute/data-transfer.html)
+#### Method 1: Transfer files back to your local machine (laptop)
 
-Once you have Globus Connect Personal installed on your laptop, go to https://app.globus.org and login to "CU Boulder Research Computing" (search for this string in the "Collection Box".  Use your identikey credentials and the Duo app on your phone to login.  This will open up your filesystem on Blanca.
+We went through Globus file transfers in a previous class and you should now have [Globus Connect Personal](https://www.globus.org/globus-connect-personal) on your laptop If you don't, you can get set up in about 5 minutes [here](https://curc.readthedocs.io/en/latest/compute/data-transfer.html)
+
+Once you have _Globus Connect Personal_ installed on your laptop, go to https://app.globus.org, find _CU Boulder Research Computing_ in the _Collection Box_ dialog box, and login using your identikey credentials and the Duo app on your phone.  This will open up your filesystem on Blanca.
 
 Once you've logged in, navigate to /rc_scratch/<yourusername>/ in the "Path" dialog box at the top.  Then click on the "qiime2-chronic-fatigue-syndrome-tutorial" directory to go inside.  
  
@@ -84,10 +138,10 @@ Now select the _.qza_ files on Blanca that you want to transfer to your laptop, 
  
 Now open the [QIIME 2 Viewer](https://view.qiime2.org/) in your browser and drag the _.qza_ files into the viewer to view them!
 
-* Rather view the files on Blanca? You can use VNC viewer per the [slides](./CHANGE_GuiOnBlanca.pdf) we previously presented (see the section on VNC). Once you've established a VNC remote desktop session on your laptop, open a terminal in your VNC session, source activate your `qiime2-2019.4` environment per the steps above, cd to the directory containing the _.qzv_ files, and use the qiime command-line viewer, e.g., ```qiime tools view heatmap.qzv```.  
+* Rather view the files on Blanca? You can use VNC viewer per the VNC section of the [slides](./CHANGE_GuiOnBlanca.pdf) we previously presented. Once you've established a VNC remote desktop session on your laptop, open a terminal in your VNC session, source activate your `qiime2-2019.4` environment per the steps above, `cd` to the directory containing the _.qzv_ files, and use the qiime command-line viewer, e.g., ```qiime tools view heatmap.qzv```.  
 
 
-Using qiime2 in batch mode with job scripts
+### Using qiime2 in batch mode with job scripts
 
 To run the gneiss tutorial in batch mode, you can download the job script called [blanca_qiime2_gneiss.sh](./blanca_qiime2_gneiss.sh), to `blogin01` and submit it using ```sbatch blanca_qime2_gneiss```
 
@@ -160,4 +214,5 @@ Once your batch job is complete, you can follow the steps above transfer the res
 
 #### See Also
 
-* [CURC JupyterHub](../gateways/jupyterhub.md)
+* [QIIME2 Documentation](https://docs.qiime2.org/2019.4/getting-started/)
+* [CURC Documentation](https://curc.readthedocs.io/en/latest/)
