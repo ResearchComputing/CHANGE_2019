@@ -207,6 +207,8 @@ ___or___
 #SBATCH --ntasks=1             
 #SBATCH --job-name=qiime2    
 #SBATCH --output=qiime2.%j.out
+#SBATCH --mail-type=END
+#SBATCH --mail-user=john.doe@colorado.edu
 
 #This example script does the qiime2 gneiss tutorial at:
 #https://docs.qiime2.org/2019.4/tutorials/gneiss/
