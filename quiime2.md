@@ -7,11 +7,14 @@ This tutorial demonstrates how to install and use the microbiome analysis packag
 
 ## Logging in to Blanca
 
-From a terminal on your local computer (laptop or desktop machine), login as follows, substituting your username for `johndoe`.
-``` ssh -X johndoe@blogin01.rc.colorado.edu```
-(enter identikey and password, accept duo push to phone)
+From a terminal on your local computer (laptop or desktop machine), login as follows, substituting your username for `johndoe`:
 
-## Installing qiime2
+``` 
+ssh -X johndoe@blogin01.rc.colorado.edu
+```
+_(enter identikey and password, accept duo push to phone)_
+
+## Installing QIIME2
 
 Installaton on Blanca follows the ["native" installaton instructions for qiime2](https://docs.qiime2.org/2019.4/install/native/)
 
@@ -25,33 +28,33 @@ Installaton on Blanca follows the ["native" installaton instructions for qiime2]
 
 ### Initialize the CURC Anaconda distribution and create the QIIME2 environment
 
+_(note that this step will take about 30 min)_
 ```
 [johndoe@blogin01]$ source /curc/sw/anaconda3/2019.03/bin/activate
 (base) [johndoe@blogin01]$ wget https://data.qiime2.org/distro/core/qiime2-2019.4-py36-linux-conda.yml
 (base) [johndoe@blogin01]$ conda env create --prefix=$PWD/qiime2-2019.4 --file qiime2-2019.4-py36-linux-conda.yml
-(this will take about 30 min)
 (base) [johndoe@blogin01]$ rm qiime2-2019.4-py36-linux-conda.yml
 ```
 
-### Activate and test the installation with the QIIME --help function
+### Activate and test the installation with the QIIME2 --help function
 
 You should already be in the 'base' CURC Anaconda environment based on the previous steps.  Now activate the QIIME2 environment:
 
 ```
-(base) [johndoe@bnode0409]$ conda activate /projects/$USER/software/anaconda/envs/qiime2-2019.4
+(base) [johndoe@blogin01]$ conda activate /projects/$USER/software/anaconda/envs/qiime2-2019.4
 ```
 
 ...you'll know you've activated it because `qiime2-2019.4` should preceed your prompt.
 
 ```
-(qiime2-2019.4) [johndoe@bnode0409]$  mkdir -p /rc_scratch/$USER/qiime2-chronic-fatigue-syndrome-tutorial
+(qiime2-2019.4) [johndoe@blogin01]$  mkdir -p /rc_scratch/$USER/qiime2-chronic-fatigue-syndrome-tutorial
 ```
 
-## Example: Using qiime2 interactively on Blanca
+## Example: Using QIIME2 interactively on Blanca
 
 We will use the QIIME2 tutorial on [Differential Abundance Analysis with Gneiss](https://docs.qiime2.org/2019.4/tutorials/gneiss/) to demonstrate using qiime in an interactive job.
 
-### Start an interactive session on a blanca-ics compute node and activate the QIIME2 environment:
+### Start an interactive session on a _blanca-ics_ compute node and activate the QIIME2 environment:
 
 ```
 [johndoe@blogin01]$ sinteractive --partition=blanca-ics --account=blanca-ics --ntasks=1 --time=03:00:00
@@ -124,26 +127,60 @@ We will use the QIIME2 tutorial on [Differential Abundance Analysis with Gneiss]
 
 ### Vizualize the results
 
-#### Method 1: Transfer files back to your local machine (laptop)
+#### Method 1: Transfer files back to your local machine (e.g., laptop)
 
-We went through Globus file transfers in a previous class and you should now have [Globus Connect Personal](https://www.globus.org/globus-connect-personal) on your laptop If you don't, you can get set up in about 5 minutes [here](https://curc.readthedocs.io/en/latest/compute/data-transfer.html)
+The easiest way to transfer files between Blanca and your laptop computer is with [Globus](https://www.globus.org/). We went through Globus file transfers in a previous tutorial during which you installed [Globus Connect Personal](https://www.globus.org/globus-connect-personal) on your laptop.  If you haven't completed this step, you can set up Globus in about 5 minutes by following [these steps](https://curc.readthedocs.io/en/latest/compute/data-transfer.html).
 
-Once you have _Globus Connect Personal_ installed on your laptop, go to https://app.globus.org, find _CU Boulder Research Computing_ in the _Collection Box_ dialog box, and login using your identikey credentials and the Duo app on your phone.  This will open up your filesystem on Blanca.
+Once you have _Globus Connect Personal_ installed on your laptop, start the application (the easiest way is to click the "_g_" icon on the top or bottom panel of your screen). 
 
-Once you've logged in, navigate to /rc_scratch/<yourusername>/ in the "Path" dialog box at the top.  Then click on the "qiime2-chronic-fatigue-syndrome-tutorial" directory to go inside.  
+Now open a web browser and go to https://app.globus.org. Find _CU Boulder Research Computing_ in the _Collection Box_ dialog box, and login to this endpoint using your CU _identikey_ credentials and the Duo app on your phone.  If the login is successful, your Blanca filesystem will now be displayed on the screen.
+
+Once you've logged in, type _"/rc_scratch/<yourusername>/"_ in the "Path" dialog box and navigate to this directory.  Then click on the _qiime2-chronic-fatigue-syndrome-tutorial_ directory to go inside.  
  
-Now go to the "Panels" option at top and click the two-panel icon.  You should now see two panels on your screen.  For the one that you aren't already logged into, search for the name of your Globus Connect Personal endpoint in "Collection Box" (this is the endpoint name you provided for your laptop when you set up Globus Connect Personal, e.g., "John Doe's laptop"). This will open up the filesystem on your laptop.  
+Now go to the "Panels" option at top and click the two-panel icon.  You should now see two panels on your screen, one with your CURC Blanca files (the one you are already logged into) and an empty panel.  In the empty panel, search for the name of your Globus Connect Personal endpoint in "Collection Box" (this is the endpoint name you provided for your laptop when you set up Globus Connect Personal, e.g., "John Doe's laptop"). If successful, this panel will now display the filesystem on your laptop.  
 
 Now select the _.qza_ files on Blanca that you want to transfer to your laptop, and click the arrow transfer them.
  
 Now open the [QIIME 2 Viewer](https://view.qiime2.org/) in your browser and drag the _.qza_ files into the viewer to view them!
 
-* Rather view the files on Blanca? You can use VNC viewer per the VNC section of the [slides](./CHANGE_GuiOnBlanca.pdf) we previously presented. Once you've established a VNC remote desktop session on your laptop, open a terminal in your VNC session, source activate your `qiime2-2019.4` environment per the steps above, `cd` to the directory containing the _.qzv_ files, and use the qiime command-line viewer, e.g., ```qiime tools view heatmap.qzv```.  
+* Would you rather view the files on Blanca? You can use VNC viewer per the VNC section of the [slides](./CHANGE_GuiOnBlanca.pdf) we previously presented. Once you've established a VNC remote desktop session on your laptop, open a terminal in your VNC session, source activate your `qiime2-2019.4` environment per the steps above, `cd` to the directory containing the _.qzv_ files, and use the qiime command-line viewer, e.g., ```qiime tools view heatmap.qzv```.  
 
 
-### Using qiime2 in batch mode with job scripts
+### Using QIIME2 in batch mode with job scripts
 
-To run the gneiss tutorial in batch mode, you can download the job script called [blanca_qiime2_gneiss.sh](./blanca_qiime2_gneiss.sh), to `blogin01` and submit it using ```sbatch blanca_qime2_gneiss```
+To run the gneiss tutorial in batch mode, you can do one of the following:
+
+1. from a directory of your choosing on `blogin01` you can clone the github repository containing this tutorial: 
+
+```git clone https://github.com/ResearchComputing/CHANGE_2019
+```
+
+...then go into the repository:
+
+```
+cd CHANGE_2019
+``` 
+
+..then and submit the script as a batch job:
+
+```
+sbatch blanca_qiime2_gneiss.sh
+```
+
+___or___
+
+2. copy the text from the sample script below and open new file on ```blogin01```:
+
+```
+nano blanca_qiime2_gneiss.sh
+```
+
+...then paste the text into the file, save/exit (use _CTRL-x_), and submit the script as a batch job:
+
+```
+sbatch blanca_qiime2_gneiss.sh
+```
+
 
 ```
 #!/bin/bash
