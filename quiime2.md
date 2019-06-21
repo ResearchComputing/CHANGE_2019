@@ -3,7 +3,7 @@
 # Blanca QIIME2 Tutorial
 #### 2019-06-21
 
-This tutorial demonstrates how to install and use the microbiome analysis package [QIIME2](https://docs.qiime2.org/2019.4/getting-started/) on the CU Research Computing Blanca computing cluster.
+This tutorial demonstrates how to install and use the microbiome analysis package [QIIME2](https://docs.qiime2.org/2019.4/getting-started/) on the CU Research Computing Blanca cluster.
 
 ## Logging in to Blanca
 
@@ -125,7 +125,7 @@ We will use the QIIME2 tutorial on [Differential Abundance Analysis with Gneiss]
   --o-visualization heatmap.qzv
 ```
 
-### Vizualize the results
+### [Vizualize the results]<a name="viz"></a>
 
 #### Method 1: Transfer files back to your local machine (e.g., laptop)
 
@@ -152,19 +152,21 @@ To run the gneiss tutorial in batch mode, you can do one of the following:
 
 1. from a directory of your choosing on `blogin01` you can clone the github repository containing this tutorial: 
 
-```git clone https://github.com/ResearchComputing/CHANGE_2019
+```
+(qiime2-2019.4) [johndoe@bnode0409]$ ml git
+(qiime2-2019.4) [johndoe@bnode0409]$ git clone https://github.com/ResearchComputing/CHANGE_2019
 ```
 
 ...then go into the repository:
 
 ```
-cd CHANGE_2019
+(qiime2-2019.4) [johndoe@bnode0409]$ cd CHANGE_2019
 ``` 
 
 ..then and submit the script as a batch job:
 
 ```
-sbatch blanca_qiime2_gneiss.sh
+(qiime2-2019.4) [johndoe@bnode0409]$ sbatch blanca_qiime2_gneiss.sh
 ```
 
 ___or___
@@ -172,13 +174,13 @@ ___or___
 2. copy the text from the sample script below and open new file on ```blogin01```:
 
 ```
-nano blanca_qiime2_gneiss.sh
+(qiime2-2019.4) [johndoe@bnode0409]$ nano blanca_qiime2_gneiss.sh
 ```
 
 ...then paste the text into the file, save/exit (use _CTRL-x_), and submit the script as a batch job:
 
 ```
-sbatch blanca_qiime2_gneiss.sh
+(qiime2-2019.4) [johndoe@bnode0409]$ sbatch blanca_qiime2_gneiss.sh
 ```
 
 
@@ -247,7 +249,7 @@ qiime gneiss dendrogram-heatmap \
   --o-visualization heatmap.qzv
 ```
 
-Once your batch job is complete, you can follow the steps above transfer the resulting output files back to your laptop or use the qiime command-line viewer, per the steps above.
+Once your batch job is complete, you can follow the steps from the [section above](#viz) regarding visualization and transfer of the resulting output files back to your laptop.
 
 #### See Also
 
