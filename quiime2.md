@@ -5,6 +5,14 @@
 
 This tutorial demonstrates how to install and use the microbiome analysis package [QIIME2](https://docs.qiime2.org/2019.4/getting-started/) on the CU Research Computing Blanca cluster.
 
+[Login to Blanca](#login)
+[Install QIIME2](#install)
+[Run a QIIME2 job interactively](#interactive)
+[Visualize/Transfer QIIME2 results](#viz)
+[Run a QIIME2 batch job](#batch)
+
+
+<a name="login"></a>
 ## Logging in to Blanca
 
 From a terminal on your local computer (laptop or desktop machine), login as follows, substituting your username for `johndoe`:
@@ -13,7 +21,7 @@ From a terminal on your local computer (laptop or desktop machine), login as fol
 ssh -X johndoe@blogin01.rc.colorado.edu
 ```
 _(enter identikey and password, accept duo push to phone)_
-
+<a name="install"></a>
 ## Installing QIIME2
 
 Installaton on Blanca follows the ["native" installaton instructions for qiime2](https://docs.qiime2.org/2019.4/install/native/)
@@ -50,6 +58,7 @@ You should already be in the 'base' CURC Anaconda environment based on the previ
 (qiime2-2019.4) [johndoe@blogin01]$  mkdir -p /rc_scratch/$USER/qiime2-chronic-fatigue-syndrome-tutorial
 ```
 
+<a name="interact"></a>
 ## Example: Using QIIME2 interactively on Blanca
 
 We will use the QIIME2 tutorial on [Differential Abundance Analysis with Gneiss](https://docs.qiime2.org/2019.4/tutorials/gneiss/) to demonstrate using qiime in an interactive job.
@@ -124,8 +133,8 @@ We will use the QIIME2 tutorial on [Differential Abundance Analysis with Gneiss]
   --p-color-map seismic \
   --o-visualization heatmap.qzv
 ```
-
-### [Vizualize the results]<a name="viz"></a>
+<a name="viz"></a>
+### Vizualize/Transfer the results
 
 #### Method 1: Transfer files back to your local machine (e.g., laptop)
 
@@ -145,8 +154,8 @@ Now open the [QIIME 2 Viewer](https://view.qiime2.org/) in your browser and drag
 
 * Would you rather view the files on Blanca? You can use VNC viewer per the VNC section of the [slides](./CHANGE_GuiOnBlanca.pdf) we previously presented. Once you've established a VNC remote desktop session on your laptop, open a terminal in your VNC session, source activate your `qiime2-2019.4` environment per the steps above, `cd` to the directory containing the _.qzv_ files, and use the qiime command-line viewer, e.g., ```qiime tools view heatmap.qzv```.  
 
-
-### Using QIIME2 in batch mode with job scripts
+<a name="batch"></a>
+## Example: Using QIIME2 in batch mode with job scripts
 
 To run the gneiss tutorial in batch mode, you can do one of the following:
 
