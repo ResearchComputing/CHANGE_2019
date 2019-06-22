@@ -34,6 +34,26 @@ Installaton on Blanca follows the ["native" installaton instructions for qiime2]
 [johndoe@blogin01]$ cd software/anaconda/envs
 ```
 
+### Modify your ~/.condarc file so that packages are downloaded to your _/projects_ directory
+
+Your _/home/$USER_ directory (also denoted with "_~_") is small -- only 2 GB. By default, conda downloads packages to your home directory when creating a new environment, and it will quickly become full. The steps here modify the conda configration file, called _~/.condarc_, to change the default location of _pkgs_dirs_ so that the packages are downloaed to your (much bigger) _/projects_ directory.
+
+Open your _~/.condarc_ file in your favorite text editor (e.g., nano):
+_(note: this file may not exist yet -- if not, just create a new file with this name)_
+```
+[johndoe@blogin01]$ nano ~/.condarc
+```
+
+...and add the following two lines:
+```
+pkgs_dirs:
+  - /projects/$USER/.conda_pkgss
+```
+
+...then save and exit the file. 
+
+Note that there are lots of other things you can customize using the [~/.condarc file](https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html).
+
 ### Initialize the CURC Anaconda distribution and create the QIIME2 environment
 
 _(note that this step will take about 30 min)_
@@ -145,7 +165,7 @@ Once you have _Globus Connect Personal_ installed on your laptop, start the appl
 
 Now open a web browser and go to https://app.globus.org. Find _CU Boulder Research Computing_ in the _Collection Box_ dialog box, and login to this endpoint using your CU _identikey_ credentials and the Duo app on your phone.  If the login is successful, your Blanca filesystem will now be displayed on the screen.
 
-Once you've logged in, type _"/rc_scratch/<yourusername>/"_ in the "Path" dialog box and navigate to this directory.  Then click on the _qiime2-chronic-fatigue-syndrome-tutorial_ directory to go inside.  
+Once you've logged in, type _"/rc_scratch/johndoe/"_ (insert your username for _johndoe_) in the "Path" dialog box and navigate to this directory.  Then click on the _qiime2-chronic-fatigue-syndrome-tutorial_ directory to go inside.  
  
 Now go to the "Panels" option at top and click the two-panel icon.  You should now see two panels on your screen, one with your CURC Blanca files (the one you are already logged into) and an empty panel.  In the empty panel, search for the name of your Globus Connect Personal endpoint in "Collection Box" (this is the endpoint name you provided for your laptop when you set up Globus Connect Personal, e.g., "John Doe's laptop"). If successful, this panel will now display the filesystem on your laptop.  
 
@@ -208,7 +228,7 @@ ___or___
 #SBATCH --job-name=qiime2    
 #SBATCH --output=qiime2.%j.out
 #SBATCH --mail-type=END
-#SBATCH --mail-user=john.doe@colorado.edu
+#SBATCH --mail-user=john.doe@colorado.edu #change to your email address!
 
 #This example script does the qiime2 gneiss tutorial at:
 #https://docs.qiime2.org/2019.4/tutorials/gneiss/
