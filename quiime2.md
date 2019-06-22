@@ -50,7 +50,7 @@ pkgs_dirs:
   - /projects/$USER/.conda_pkgss
 ```
 
-...then save and exit the file. 
+...then save and exit the file. You won't need to perform this step again -- it's permanent unless you change _pkgs_dirs_ by editing _~/.condarc_ again.
 
 Note that there are lots of other things you can customize using the [~/.condarc file](https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html).
 
